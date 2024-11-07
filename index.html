@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI AutoHotkey Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.22.1/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-blue-900 text-white min-h-screen">
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">AHK AI Assistant</h1>
+            <p class="text-blue-300">Tell me what you want to automate, and I'll create the script for you</p>
+        </div>
+
+        <!-- Main Chat Interface -->
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-6 mb-6">
+            <!-- Chat History -->
+            <div id="chatHistory" class="mb-6 space-y-4 max-h-96 overflow-y-auto">
+                <!-- Messages will be added here -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="flex space-x-4">
+                <input type="text" id="userInput" 
+                       placeholder="e.g., 'Create a hotkey that types my email address when I press Ctrl+E'" 
+                       class="flex-1 bg-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       onkeypress="if(event.key === 'Enter') processInput()">
+                <button onclick="processInput()" 
+                        class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg flex items-center">
+                    <span class="mr-2">Generate</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Code Preview -->
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Generated Script</h2>
+                <div class="space-x-2">
+                    <button onclick="copyCode()" 
+                            class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg">
+                        Copy Script
+                    </button>
+                    <button onclick="downloadScript()" 
+                            class="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded-lg">
+                        Download .ahk
+                    </button>
+                </div>
+            </div>
+            <div id="editor" class="h-64 rounded-lg"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize ACE editor
+        let editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/autohotkey");
+        editor.setReadOnly(true);
+
+        // Common patterns for script generation
+        const patterns = {
+            email: {
+                regex: /email|mail|e-mail/i,
+                generate: (text) => `
+^e:: {
+    SendText "${text}"
+}`,
+                defaultValue: "your.email@example.com"
+            },
+            text: {
+                regex: /type|text|write|send/i,
+                generate: (text) => `
+^t:: {
+    SendText "${text}"
+}`,
+                defaultValue: "Your text here"
+            },
+            window: {
+                regex: /window|activate|switch|program/i,
+                generate: (window) => `
+^w:: {
+    WinActivate "${window}"
+}`,
+                defaultValue: "Window Title"
+            },
+            mouse: {
+                regex: /click|mouse|cursor/i,
+                generate: (coords) => `
+^m:: {
+    Click "${coords}"
+}`,
+                defaultValue: "100, 100"
+            }
+        };
+
+        function addMessage(message, isUser) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-3/4 ${isUser ? 'bg-blue-600' : 'bg-gray-700'} rounded-lg px-4 py-2">
+                    ${message}
+                </div>
+            `;
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function generateScript(input) {
+            // Common AHK header
+            let script = `; AutoHotkey 2.0 Script
+#Requires AutoHotkey v2.0
+#SingleInstance Force
+
+`;
+
+            // Process the input and generate appropriate script
+            if (patterns.email.regex.test(input)) {
+                const email = prompt("Enter the email address:", patterns.email.defaultValue);
+                script += patterns.email.generate(email);
+            }
+            else if (patterns.text.regex.test(input)) {
+                const text = prompt("Enter the text to type:", patterns.text.defaultValue);
+                script += patterns.text.generate(text);
+            }
+            else if (patterns.window.regex.test(input)) {
+                const window = prompt("Enter the window title:", patterns.window.defaultValue);
+                script += patterns.window.generate(window);
+            }
+            else if (patterns.mouse.regex.test(input)) {
+                const coords = prompt("Enter coordinates (x, y):", patterns.mouse.defaultValue);
+                script += patterns.mouse.generate(coords);
+            }
+            else {
+                // Default to custom hotkey
+                const hotkey = prompt("Enter hotkey combination (e.g., ^t):", "^t");
+                const action = prompt("Enter the action:", "SendText \"Hello World\"");
+                script += `
+${hotkey}:: {
+    ${action}
+}`;
+            }
+
+            return script;
+        }
+
+        function processInput() {
+            const input = document.getElementById('userInput').value;
+            if (!input) return;
+
+            // Add user message
+            addMessage(input, true);
+
+            // Generate and display script
+            const script = generateScript(input);
+            editor.setValue(script, -1);
+
+            // Add AI response
+            addMessage("I've generated an AutoHotkey script based on your request. You can copy it or download it as a .ahk file.", false);
+
+            // Clear input
+            document.getElementById('userInput').value = '';
+        }
+
+        function copyCode() {
+            navigator.clipboard.writeText(editor.getValue());
+            addMessage("Script copied to clipboard!", false);
+        }
+
+        function downloadScript() {
+            const blob = new Blob([editor.getValue()], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'script.ahk';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            addMessage("Script downloaded as script.ahk", false);
+        }
+
+        // Add initial message
+        addMessage("Hello! I'm your AHK Assistant. Tell me what you want to automate, and I'll create an AutoHotkey script for you. For example, try asking me to 'create a hotkey that types my email address' or 'make a script that activates Chrome when I press Ctrl+G'.", false);
+    </script>
+</body>
+</html>
