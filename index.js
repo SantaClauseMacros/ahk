@@ -1,34 +1,40 @@
 const express = require('express');
 const multer = require('multer');
 const { exec } = require('child_process');
+const cors = require('cors');
+const fs = require('fs');
 const app = express();
-const port = 3000;
 
-// Set up file upload handling
-const storage = multer.memoryStorage(); // Store the file in memory
+// Enable CORS for cross-origin requests
+app.use(cors());
+
+// Set up Multer to store uploaded files in memory
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.use(express.static('public'));
-
-// Endpoint to handle script upload and execution
+// POST endpoint to handle script upload and execution
 app.post('/run-script', upload.single('file'), (req, res) => {
-  const script = req.file.buffer.toString('utf8');
+  if (!req.file) {
+    return res.status(400).json({ output: 'No file uploaded.' });
+  }
 
-  // Save the script temporarily in a file
-  const fs = require('fs');
-  const scriptPath = './temp_script.ahk';
+  const script = req.file.buffer.toString('utf8');
+  const scriptPath = './temp_script.ahk';  // Path to save temporary AHK script
+
+  // Write the AHK script to a temporary file
   fs.writeFileSync(scriptPath, script);
 
-  // Run the script using AHK (ensure AHK is installed on Replit or your cloud server)
+  // Execute the AHK script (you need AutoHotkey installed on your server)
   exec(`autohotkey "${scriptPath}"`, (error, stdout, stderr) => {
     if (error) {
-      return res.status(500).json({ output: stderr });
+      return res.status(500).json({ output: `Error: ${stderr}` });
     }
-    res.json({ output: stdout });
+    res.json({ output: stdout }); // Send the output back to the client
   });
 });
 
-// Start server
+// Start the server
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
