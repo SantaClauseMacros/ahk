@@ -513,230 +513,133 @@ return`
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Quiz Generator</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 p-6">
-    <div class="max-w-4xl mx-auto">
-        <!-- Input -->
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h1 class="text-2xl font-bold mb-4">Smart Quiz Generator</h1>
-            <textarea 
-                id="notesInput" 
-                class="w-full h-64 p-4 border rounded"
-                placeholder="Paste your notes here..."
-            ></textarea>
-            <div class="mt-4 flex space-x-4">
-                <select id="questionLimit" class="border rounded p-2">
-                    <option value="5">5 Questions</option>
-                    <option value="10" selected>10 Questions</option>
-                    <option value="15">15 Questions</option>
-                    <option value="20">20 Questions</option>
-                </select>
-                <button 
-                    onclick="makeQuiz()" 
-                    class="flex-1 bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600"
-                >
-                    Create Quiz
-                </button>
-            </div>
-        </div>
+<h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <Code className="w-6 h-6" />
+          Code Generation Assistant
+        </h1>
 
-        <!-- Quiz -->
-        <div id="quizDisplay" class="hidden">
-            <div id="questionList" class="space-y-6">
-                <!-- Questions will appear here -->
-            </div>
-            <button 
-                onclick="checkAnswers()" 
-                class="mt-6 w-full bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Language Selection */}
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Programming Language
+            </label>
+            <select 
+              className="w-full p-2 border rounded-md bg-white"
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
             >
-                Check Answers
-            </button>
+              {languages.map((lang) => (
+                <option key={lang.value} value={lang.value}>
+                  {lang.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Category Selection */}
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Category
+            </label>
+            <select 
+              className="w-full p-2 border rounded-md bg-white"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {languages
+                .find(lang => lang.value === language)
+                ?.categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </option>
+                ))}
+            </select>
+          </div>
         </div>
+
+        {/* Description Input */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-2">
+            Describe what you want to create
+          </label>
+          <textarea
+            className="w-full p-2 border rounded-md min-h-[100px]"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Example: Create a game automation script with anti-detection..."
+          />
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-4 mb-6">
+          <Button 
+            className="flex items-center gap-2" 
+            onClick={generateCode}
+          >
+            <Play className="w-4 h-4" />
+            Generate Code
+          </Button>
+          
+          {generatedCode && (
+            <Button
+              className="flex items-center gap-2"
+              variant="outline"
+              onClick={copyToClipboard}
+            >
+              {copied ? (
+                <>
+                  <RefreshCw className="w-4 h-4" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  Copy Code
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+
+        {/* Generated Code Display */}
+        {generatedCode && (
+          <div className="relative">
+            <pre className="bg-gray-100 p-4 rounded-md overflow-x-auto max-h-[500px] overflow-y-auto">
+              <code className="text-sm font-mono whitespace-pre">
+                {generatedCode}
+              </code>
+            </pre>
+          </div>
+        )}
+
+        {/* Quick Tips */}
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold mb-4">Quick Tips</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="p-4">
+              <h3 className="font-medium mb-2">AHK Tips</h3>
+              <ul className="list-disc pl-4 space-y-1 text-sm">
+                <li>Use game templates for automation scripts</li>
+                <li>Hotkey templates for keyboard/mouse bindings</li>
+                <li>GUI templates for custom interfaces</li>
+                <li>Anti-detection features included</li>
+              </ul>
+            </Card>
+            <Card className="p-4">
+              <h3 className="font-medium mb-2">HTML/JavaScript Tips</h3>
+              <ul className="list-disc pl-4 space-y-1 text-sm">
+                <li>Form templates for user input</li>
+                <li>Responsive layouts available</li>
+                <li>Component templates for reusability</li>
+                <li>Game logic templates included</li>
+              </ul>
+            </Card>
+          </div>
+        </div>
+      </Card>
     </div>
+  );
+};
 
-    <script>
-        const questionTypes = {
-            what: (topic) => ({
-                question: `What is ${topic} about?`,
-                correctAnswer: `${topic} is a key concept that explains important aspects of the subject`,
-                wrongAnswers: [
-                    `${topic} is an unrelated concept`,
-                    `${topic} has no clear definition`,
-                    `${topic} is from a different subject`
-                ]
-            }),
-            
-            how: (topic) => ({
-                question: `How does ${topic} work?`,
-                correctAnswer: `${topic} works by addressing key principles in the subject`,
-                wrongAnswers: [
-                    `${topic} doesn't have a clear function`,
-                    `${topic} works randomly without pattern`,
-                    `${topic} has no practical application`
-                ]
-            }),
-            
-            why: (topic) => ({
-                question: `Why is ${topic} important?`,
-                correctAnswer: `${topic} is important because it's fundamental to understanding the subject`,
-                wrongAnswers: [
-                    `${topic} isn't actually important`,
-                    `${topic} is a minor detail`,
-                    `${topic} could be ignored entirely`
-                ]
-            }),
-
-            when: (topic) => ({
-                question: `When would you apply ${topic}?`,
-                correctAnswer: `${topic} is applied when dealing with core aspects of this subject`,
-                wrongAnswers: [
-                    `${topic} is never applied in practice`,
-                    `${topic} is only used in emergencies`,
-                    `${topic} is outdated and not used anymore`
-                ]
-            }),
-
-            where: (topic) => ({
-                question: `Where is ${topic} most relevant?`,
-                correctAnswer: `${topic} is most relevant in understanding this subject area`,
-                wrongAnswers: [
-                    `${topic} is only relevant in other fields`,
-                    `${topic} has no relevant applications`,
-                    `${topic} is only used in theory`
-                ]
-            })
-        };
-
-        function makeQuiz() {
-            const notes = document.getElementById('notesInput').value;
-            if (!notes) {
-                alert('Please enter some notes!');
-                return;
-            }
-
-            const limit = parseInt(document.getElementById('questionLimit').value);
-            const lines = notes.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-            let questions = [];
-            
-            lines.forEach(line => {
-                const words = line.split(' ');
-                const mainWords = words.filter(word => word.length > 4 && !isCommonWord(word));
-                
-                if (mainWords.length > 0) {
-                    const topic = mainWords[0];
-                    Object.values(questionTypes).forEach(questionMaker => {
-                        questions.push(questionMaker(topic));
-                    });
-                }
-            });
-
-            questions = questions.sort(() => Math.random() - 0.5).slice(0, limit);
-            
-            const questionList = document.getElementById('questionList');
-            questionList.innerHTML = `
-                <div class="mb-6">
-                    <div class="bg-gray-200 rounded-full h-2.5 mb-2">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%" id="progressBar"></div>
-                    </div>
-                    <div class="text-right text-sm text-gray-600">Progress: <span id="progressText">0%</span></div>
-                </div>
-            `;
-
-            questionList.innerHTML += questions.map((q, i) => `
-                <div class="bg-white rounded-lg shadow p-6">
-                    <p class="font-bold mb-4">Question ${i + 1} of ${limit}: ${q.question}</p>
-                    <div class="space-y-2">
-                        ${[q.correctAnswer, ...q.wrongAnswers]
-                            .sort(() => Math.random() - 0.5)
-                            .map((answer, j) => `
-                                <div class="flex items-center">
-                                    <input type="radio" 
-                                           name="q${i}" 
-                                           value="${answer}"
-                                           id="q${i}a${j}" 
-                                           onchange="updateProgress()"
-                                           class="mr-2">
-                                    <label for="q${i}a${j}">${answer}</label>
-                                </div>
-                            `).join('')}
-                    </div>
-                </div>
-            `).join('');
-
-            questionList.innerHTML += `
-                <button onclick="saveQuiz()" class="mt-4 bg-purple-500 text-white px-6 py-2 rounded hover:bg-purple-600">
-                    Save Quiz
-                </button>
-            `;
-
-            document.getElementById('quizDisplay').classList.remove('hidden');
-        }
-
-        function updateProgress() {
-            const totalQuestions = document.getElementsByClassName('bg-white rounded-lg shadow p-6').length;
-            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
-            const percentage = Math.round((answeredQuestions / totalQuestions) * 100);
-            
-            document.getElementById('progressBar').style.width = `${percentage}%`;
-            document.getElementById('progressText').textContent = `${percentage}%`;
-        }
-
-        function checkAnswers() {
-            const questions = document.getElementsByClassName('bg-white rounded-lg shadow p-6');
-            let score = 0;
-            let total = 0;
-
-            for (let question of questions) {
-                const selected = question.querySelector('input:checked');
-                if (selected) {
-                    total++;
-                    if (selected.value.includes('key concept') || 
-                        selected.value.includes('works by') || 
-                        selected.value.includes('important because') ||
-                        selected.value.includes('is applied when') ||
-                        selected.value.includes('most relevant')) {
-                        score++;
-                    }
-                }
-            }
-
-            alert(`You got ${score} out of ${total} correct!`);
-            saveScore(score, total);
-        }
-
-        function saveQuiz() {
-            const quizData = {
-                notes: document.getElementById('notesInput').value,
-                questions: Array.from(document.getElementsByClassName('bg-white rounded-lg shadow p-6'))
-                    .map(q => ({
-                        question: q.querySelector('p').textContent,
-                        answers: Array.from(q.querySelectorAll('input')).map(i => i.value)
-                    }))
-            };
-            
-            localStorage.setItem('savedQuiz', JSON.stringify(quizData));
-            alert('Quiz saved! You can access it later.');
-        }
-
-        function saveScore(score, total) {
-            const scores = JSON.parse(localStorage.getItem('quizScores') || '[]');
-            scores.push({
-                date: new Date().toISOString(),
-                score: score,
-                total: total,
-                percentage: Math.round((score/total) * 100)
-            });
-            localStorage.setItem('quizScores', JSON.stringify(scores));
-        }
-
-        function isCommonWord(word) {
-            const common = ['about', 'above', 'after', 'again', 'their', 'there', 
-                          'these', 'those', 'which', 'while', 'would', 'because', 
-                          'could', 'should', 'where', 'when', 'what', 'with'];
-            return common.includes(word.toLowerCase());
-        }
-    </script>
-</body>
-</html>
+export default CodeGenerator;
