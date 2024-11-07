@@ -1,275 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Generation Assistant</title>
-    <!-- Core React -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Custom Styles -->
-    <style>
-        .code-block {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin: 1rem 0;
-        }
-        .copy-button {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-        }
-        .language-select {
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            border: 1px solid #e5e7eb;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-        .generate-button {
-            background-color: #3b82f6;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-        }
-        .generate-button:hover {
-            background-color: #2563eb;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AHK Script Tester</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 80%;
+      max-width: 600px;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    input[type="file"] {
+      margin-top: 20px;
+      padding: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
-    <div id="root"></div>
-    
-    <!-- Main App Script -->
-    <script>
-        const { useState, useEffect } = React;
+<body>
 
-        function CodeGenerator() {
-            const [language, setLanguage] = useState('ahk');
-            const [category, setCategory] = useState('game');
-            const [code, setCode] = useState('');
-            const [copied, setCopied] = useState(false);
+<div class="container">
+  <h1>AHK Script Tester</h1>
+  <input type="file" id="fileInput" accept=".ahk" />
+  <button id="submitButton">Run Script</button>
 
-            // Code templates object (moved from previous code)
-            const templates = {
-                ahk: {
-                    game: `#SingleInstance Force
-SetWorkingDir %A_ScriptDir%
-#MaxThreadsPerHotkey 2
+  <div id="output"></div>
+</div>
 
-; Configuration
-global isRunning := false
-global pauseScript := false
+<script>
+  const submitButton = document.getElementById("submitButton");
+  const fileInput = document.getElementById("fileInput");
+  const outputDiv = document.getElementById("output");
 
-; Hotkeys
-F7::  ; Toggle script
-{
-    isRunning := !isRunning
-    if (isRunning) {
-        SetTimer, MainGameLoop, 100
-        ToolTip, Script Running
+  submitButton.addEventListener("click", () => {
+    const file = fileInput.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // Send the AHK script to the backend (You'll need to set up the backend)
+      fetch("https://your-backend-server.com/run-script", {
+        method: "POST",
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        outputDiv.innerHTML = `Output:\n\n${data.output}`;
+      })
+      .catch(error => {
+        outputDiv.innerHTML = `Error: ${error}`;
+      });
     } else {
-        SetTimer, MainGameLoop, Off
-        ToolTip, Script Stopped
+      outputDiv.innerHTML = "Please upload an AHK script.";
     }
-    SetTimer, RemoveToolTip, -1000
-    return
-}
+  });
+</script>
 
-MainGameLoop:
-{
-    if (!isRunning || pauseScript)
-        return
-        
-    ; Add your game logic here
-    return
-}`,
-                    hotkey: `#SingleInstance Force
-SetWorkingDir %A_ScriptDir%
-
-; Gaming hotkeys
-~LButton::
-{
-    ; Add click enhancement here
-    return
-}
-
-~RButton::
-{
-    ; Add right-click enhancement here
-    return
-}
-
-F1::  ; Quick heal
-{
-    Send, {1}
-    return
-}
-
-^q::  ; Ctrl+Q combo
-{
-    Send, {1}
-    Sleep, 100
-    Send, {2}
-    return
-}`,
-                    automation: `#SingleInstance Force
-SetWorkingDir %A_ScriptDir%
-#MaxThreadsPerHotkey 2
-
-; Anti-detection measures
-Random, delay, 800, 2000
-SetMouseDelay, delay
-
-; Main automation loop
-F7::
-{
-    Loop {
-        ; Add your automation steps here
-        Sleep, % Random(500, 1500)
-        
-        if (!GetKeyState("F7", "P"))
-            break
-    }
-    return
-}
-
-Random(min, max) {
-    Random, val, min, max
-    return val
-}`
-                },
-                html: {
-                    basic: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Welcome</h1>
-    <p>This is a basic template.</p>
-</body>
-</html>`,
-                    form: `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Form</title>
-    <style>
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-        }
-    </style>
-</head>
-<body>
-    <form>
-        <div class="form-group">
-            <label>Name:</label>
-            <input type="text" required>
-        </div>
-        <div class="form-group">
-            <label>Email:</label>
-            <input type="email" required>
-        </div>
-        <button type="submit">Submit</button>
-    </form>
-</body>
-</html>`
-                }
-            };
-
-            const generateCode = () => {
-                const template = templates[language]?.[category] || 'Template not found';
-                setCode(template);
-            };
-
-            const copyToClipboard = async () => {
-                try {
-                    await navigator.clipboard.writeText(code);
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                } catch (err) {
-                    console.error('Failed to copy:', err);
-                }
-            };
-
-            return React.createElement('div', { className: 'container mx-auto p-4 max-w-4xl' },
-                React.createElement('h1', { className: 'text-3xl font-bold mb-6' }, 'Code Generation Assistant'),
-                
-                React.createElement('div', { className: 'mb-4' },
-                    React.createElement('label', { className: 'block mb-2' }, 'Language:'),
-                    React.createElement('select', {
-                        className: 'language-select',
-                        value: language,
-                        onChange: (e) => setLanguage(e.target.value)
-                    },
-                        React.createElement('option', { value: 'ahk' }, 'AutoHotkey'),
-                        React.createElement('option', { value: 'html' }, 'HTML')
-                    )
-                ),
-                
-                React.createElement('div', { className: 'mb-4' },
-                    React.createElement('label', { className: 'block mb-2' }, 'Category:'),
-                    React.createElement('select', {
-                        className: 'language-select',
-                        value: category,
-                        onChange: (e) => setCategory(e.target.value)
-                    },
-                        language === 'ahk' ? [
-                            React.createElement('option', { value: 'game' }, 'Game Script'),
-                            React.createElement('option', { value: 'hotkey' }, 'Hotkey Script'),
-                            React.createElement('option', { value: 'automation' }, 'Automation Script')
-                        ] : [
-                            React.createElement('option', { value: 'basic' }, 'Basic Template'),
-                            React.createElement('option', { value: 'form' }, 'Form Template')
-                        ]
-                    )
-                ),
-                
-                React.createElement('button', {
-                    className: 'generate-button mb-4',
-                    onClick: generateCode
-                }, 'Generate Code'),
-                
-                code && React.createElement('div', { className: 'relative' },
-                    React.createElement('pre', { className: 'code-block' },
-                        React.createElement('code', null, code)
-                    ),
-                    React.createElement('button', {
-                        className: 'copy-button bg-blue-500 text-white px-3 py-1 rounded',
-                        onClick: copyToClipboard
-                    }, copied ? 'Copied!' : 'Copy')
-                )
-            );
-        }
-
-        // Render the app
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(CodeGenerator));
-    </script>
 </body>
 </html>
