@@ -3,109 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Gaming Macro Creator</title>
+    <title>Ultimate Gaming Macro AI - Pro Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.22.1/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 text-white min-h-screen">
-    <div class="max-w-6xl mx-auto p-6">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-5xl font-bold mb-4 text-red-500">Ultimate Game Macro AI</h1>
-            <p class="text-lg text-red-300">Advanced Gaming Automation System</p>
+<body class="bg-[#0D1117] text-gray-200 min-h-screen">
+    <!-- Floating Particles Background -->
+    <div class="fixed inset-0 pointer-events-none">
+        <div id="particles-js"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="relative">
+        <!-- Neon Header -->
+        <div class="text-center py-10 bg-gradient-to-r from-transparent via-purple-900/20 to-transparent">
+            <h1 class="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-4">
+                ULTIMATE MACRO AI
+            </h1>
+            <p class="text-xl text-purple-300">Neural Network Enhanced Gaming Automation</p>
         </div>
 
-        <!-- Main Interface -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Left Panel - Input -->
-            <div class="space-y-6">
-                <!-- Game Selection -->
-                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                    <h2 class="text-xl font-bold mb-4">Game Settings</h2>
-                    <select id="gameSelect" class="w-full bg-gray-700 p-2 rounded mb-4">
-                        <option value="custom">Custom Game</option>
-                        <option value="mmorpg">MMORPG</option>
-                        <option value="fps">FPS Game</option>
-                        <option value="moba">MOBA</option>
-                        <option value="survival">Survival Game</option>
-                    </select>
-                    
-                    <div id="gameSpecificControls" class="space-y-4">
-                        <!-- Dynamically populated based on game type -->
-                    </div>
-                </div>
+        <div class="max-w-7xl mx-auto p-6">
+            <!-- Main Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left Panel - Settings -->
+                <div class="space-y-6">
+                    <!-- Game Profile -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20">
+                        <h2 class="text-xl font-bold mb-4 text-purple-400">Game Profile</h2>
+                        <select id="gameProfile" 
+                                class="w-full bg-gray-700/50 backdrop-blur-sm p-3 rounded-lg border border-purple-500/20">
+                            <option value="custom">Custom Game</option>
+                            <option value="mmorpg">MMORPG (Advanced)</option>
+                            <option value="fps">FPS (Ultra Precision)</option>
+                            <option value="moba">MOBA (Pattern Based)</option>
+                            <option value="survival">Survival (Resource Focus)</option>
+                        </select>
 
-                <!-- Macro Creation -->
-                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                    <h2 class="text-xl font-bold mb-4">Describe Your Macro</h2>
-                    <textarea id="macroDescription" rows="4" 
-                              class="w-full bg-gray-700 p-3 rounded mb-4"
-                              placeholder="Example: I need a macro that farms materials by clicking every 0.5 seconds while moving in a specific pattern, and stops if it detects enemies..."></textarea>
-                    
-                    <!-- Advanced Options -->
-                    <div class="space-y-4">
-                        <label class="block">
-                            <span class="font-semibold">Timing Type</span>
-                            <select id="timingType" class="w-full bg-gray-700 p-2 rounded mt-1">
-                                <option value="fixed">Fixed Intervals</option>
-                                <option value="random">Randomized (More Human-Like)</option>
-                                <option value="adaptive">Adaptive (Based on Game State)</option>
-                            </select>
-                        </label>
-
-                        <label class="block">
-                            <span class="font-semibold">Detection Method</span>
-                            <select id="detectionMethod" class="w-full bg-gray-700 p-2 rounded mt-1">
-                                <option value="pixel">Pixel Color Detection</option>
-                                <option value="image">Image Recognition</option>
-                                <option value="memory">Memory Values (Advanced)</option>
-                            </select>
-                        </label>
-
-                        <label class="block">
-                            <span class="font-semibold">Safety Features</span>
-                            <select id="safetyFeatures" class="w-full bg-gray-700 p-2 rounded mt-1">
-                                <option value="basic">Basic (Random Delays)</option>
-                                <option value="advanced">Advanced (Pattern Analysis)</option>
-                                <option value="stealth">Stealth Mode (Anti-Detection)</option>
-                            </select>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Panel - Output -->
-            <div class="space-y-6">
-                <!-- Generated Script -->
-                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Generated Macro</h2>
-                        <div class="space-x-2">
-                            <button onclick="generateMacro()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
-                                Generate
-                            </button>
-                            <button onclick="testMacro()" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded">
-                                Test
-                            </button>
-                            <button onclick="downloadMacro()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded">
-                                Download
+                        <!-- Resolution Detection -->
+                        <div class="mt-4">
+                            <button onclick="detectGameWindow()" 
+                                    class="w-full bg-purple-600/50 hover:bg-purple-600/70 p-3 rounded-lg">
+                                <i class="fas fa-crosshairs mr-2"></i>Detect Game Window
                             </button>
                         </div>
                     </div>
-                    <div id="editor" class="h-96 rounded"></div>
+
+                    <!-- AI Configuration -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20">
+                        <h2 class="text-xl font-bold mb-4 text-purple-400">AI Configuration</h2>
+                        
+                        <div class="space-y-4">
+                            <!-- OCR Settings -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">OCR Mode</label>
+                                <select id="ocrMode" class="w-full bg-gray-700/50 p-2 rounded-lg">
+                                    <option value="realtime">Realtime Scanning</option>
+                                    <option value="triggered">Event Triggered</option>
+                                    <option value="interval">Interval Based</option>
+                                </select>
+                            </div>
+
+                            <!-- Neural Network -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Pattern Learning</label>
+                                <select id="neuralMode" class="w-full bg-gray-700/50 p-2 rounded-lg">
+                                    <option value="aggressive">Aggressive Learning</option>
+                                    <option value="balanced">Balanced</option>
+                                    <option value="stealth">Stealth Priority</option>
+                                </select>
+                            </div>
+
+                            <!-- Anti-Detection -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Anti-Detection Level</label>
+                                <input type="range" min="1" max="5" value="3" 
+                                       class="w-full accent-purple-500" id="antiDetectionLevel">
+                                <div class="flex justify-between text-xs">
+                                    <span>Basic</span>
+                                    <span>Balanced</span>
+                                    <span>Ultra-Safe</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Recognition -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20">
+                        <h2 class="text-xl font-bold mb-4 text-purple-400">Visual Recognition</h2>
+                        
+                        <div class="space-y-4">
+                            <button onclick="captureRegion()" 
+                                    class="w-full bg-blue-600/50 hover:bg-blue-600/70 p-3 rounded-lg">
+                                <i class="fas fa-camera mr-2"></i>Capture Region
+                            </button>
+                            
+                            <div id="capturedRegions" class="space-y-2">
+                                <!-- Captured regions will be listed here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Macro Analysis -->
-                <div class="bg-gray-800 rounded-xl p-6 shadow-lg">
-                    <h2 class="text-xl font-bold mb-4">Macro Analysis</h2>
-                    <div id="analysisOutput" class="space-y-4">
-                        <div class="bg-gray-700 p-4 rounded">
-                            <h3 class="font-bold text-red-400">Detection Risk</h3>
-                            <div id="riskLevel" class="mt-2">Low Risk</div>
+                <!-- Middle Panel - AI Chat & Design -->
+                <div class="space-y-6">
+                    <!-- AI Chat -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20 h-[600px] flex flex-col">
+                        <h2 class="text-xl font-bold mb-4 text-purple-400">AI Assistant</h2>
+                        
+                        <!-- Chat History -->
+                        <div id="chatHistory" class="flex-grow overflow-y-auto mb-4 space-y-4">
+                            <!-- Messages will appear here -->
                         </div>
-                        <div class="bg-gray-700 p-4 rounded">
-                            <h3 class="font-bold text-red-400">Performance Impact</h3>
-                            <div id="performanceImpact" class="mt-2">Minimal</div>
+
+                        <!-- Input Area -->
+                        <div class="flex space-x-2">
+                            <input type="text" id="aiInput" 
+                                   placeholder="Describe your macro requirements..." 
+                                   class="flex-grow bg-gray-700/50 p-3 rounded-lg border border-purple-500/20">
+                            <button onclick="processAIRequest()" 
+                                    class="bg-purple-600/50 hover:bg-purple-600/70 px-4 rounded-lg">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel - Code & Analysis -->
+                <div class="space-y-6">
+                    <!-- Generated Script -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-purple-400">Generated Script</h2>
+                            <div class="space-x-2">
+                                <button onclick="testScript()" 
+                                        class="bg-yellow-600/50 hover:bg-yellow-600/70 px-4 py-2 rounded-lg">
+                                    <i class="fas fa-play mr-2"></i>Test
+                                </button>
+                                <button onclick="downloadScript()" 
+                                        class="bg-green-600/50 hover:bg-green-600/70 px-4 py-2 rounded-lg">
+                                    <i class="fas fa-download mr-2"></i>Save
+                                </button>
+                            </div>
+                        </div>
+                        <div id="editor" class="h-[400px] rounded-lg"></div>
+                    </div>
+
+                    <!-- Real-time Analysis -->
+                    <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-purple-500/20">
+                        <h2 class="text-xl font-bold mb-4 text-purple-400">Real-time Analysis</h2>
+                        <div class="space-y-4">
+                            <!-- CPU Usage -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">CPU Impact</label>
+                                <div class="w-full bg-gray-700/50 rounded-full h-4">
+                                    <div id="cpuUsage" 
+                                         class="bg-green-500 rounded-full h-4 transition-all duration-500" 
+                                         style="width: 20%">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Detection Risk -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Detection Risk</label>
+                                <div class="w-full bg-gray-700/50 rounded-full h-4">
+                                    <div id="detectionRisk" 
+                                         class="bg-yellow-500 rounded-full h-4 transition-all duration-500" 
+                                         style="width: 30%">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pattern Effectiveness -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Pattern Effectiveness</label>
+                                <div class="w-full bg-gray-700/50 rounded-full h-4">
+                                    <div id="patternEffectiveness" 
+                                         class="bg-blue-500 rounded-full h-4 transition-all duration-500" 
+                                         style="width: 80%">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,538 +195,439 @@
     </div>
 
     <script>
-        // Initialize ACE editor
+        // Initialize ACE editor with custom theme
         let editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.session.setMode("ace/mode/autohotkey");
+        editor.setOptions({
+            fontSize: "14px",
+            showPrintMargin: false,
+            highlightActiveLine: true
+        });
 
-        // Macro Templates
-        const macroTemplates = {
-            farming: `
-#Requires AutoHotkey v2.0
-#SingleInstance Force
+        // Initialize Tesseract.js
+        const worker = Tesseract.createWorker();
 
-; Advanced Farming Macro with Anti-Detection
-global running := false
-global detectionActive := true
-
-; Randomization functions
-RandomSleep(min, max) {
-    Sleep Random(min, max)
-}
-
-; Pixel detection
-CheckPixelColor(x, y, targetColor) {
-    return PixelGetColor(x, y) = targetColor
-}
-
-; Movement patterns
-class MovementPattern {
-    static patterns := [
-        [[0,0], [100,0], [100,100], [0,100]],
-        [[0,0], [50,50], [-50,50], [0,0]],
-        [[0,0], [Random(-100,100), Random(-100,100)]]
-    ]
-    
-    static GetRandomPattern() {
-        return this.patterns[Random(1, this.patterns.Length)]
-    }
-}
-
-; Main macro hotkey
-F1:: {
-    running := !running
-    if (running) {
-        this.StartMacro()
-    }
-}
-
-StartMacro() {
-    while (running && detectionActive) {
-        ; Check for enemies/danger
-        if (CheckPixelColor(960, 540, 0xFF0000)) {
-            this.PauseMacro()
-            continue
+        // Advanced OCR processing function
+        async function processOCR(imageData) {
+            await worker.load();
+            await worker.loadLanguage('eng');
+            await worker.initialize('eng');
+            const result = await worker.recognize(imageData);
+            return result.data.text;
         }
 
-        ; Perform farming action
-        Click
-        RandomSleep(450, 550)  ; Randomized delay
+        // Neural network pattern recognition
+        class NeuralPattern {
+            constructor() {
+                this.patterns = [];
+                this.learningRate = 0.1;
+            }
 
-        ; Move in pattern
-        pattern := MovementPattern.GetRandomPattern()
-        for pos in pattern {
-            if (!running)
-                break
-            MouseMove pos[1], pos[2], 10
-            RandomSleep(200, 300)
-        }
+            addPattern(pattern) {
+                this.patterns.push({
+                    sequence: pattern,
+                    timestamp: Date.now(),
+                    frequency: 1
+                });
+                this.analyze();
+            }
 
-        ; Add random extra movements
-        if (Random(1, 10) = 1) {
-            MouseMove Random(-50, 50), Random(-50, 50), 20, "R"
-            RandomSleep(100, 200)
-        }
-    }
-}
+            analyze() {
+                // Pattern analysis logic
+                const recentPatterns = this.patterns.filter(p => 
+                    Date.now() - p.timestamp < 3600000
+                );
 
-PauseMacro() {
-    running := false
-    ToolTip "Danger detected - macro paused"
-    SetTimer () => ToolTip(), -3000
-}
+                // Calculate pattern frequency
+                const frequencyMap = new Map();
+                recentPatterns.forEach(p => {
+                    const key = JSON.stringify(p.sequence);
+                    frequencyMap.set(key, (frequencyMap.get(key) || 0) + 1);
+                });
 
-; Emergency stop
-F2:: {
-    running := false
-    detectionActive := false
-}`,
+                // Adjust timing based on frequency
+                this.learningRate = Math.max(0.05, 
+                    0.1 - (Math.max(...frequencyMap.values()) * 0.01)
+                );
+            }
 
-            combat: `
-#Requires AutoHotkey v2.0
-#SingleInstance Force
-
-; Advanced Combat Macro with Skill Rotation
-global running := false
-global targetHPColor := 0xFF0000
-global skillCooldowns := Map(
-    "skill1", 0,
-    "skill2", 0,
-    "skill3", 0,
-    "skill4", 0
-)
-
-class SkillRotation {
-    static priorities := [
-        {key: "1", cooldown: 5000, condition: "CheckEnemyHP() > 75"},
-        {key: "2", cooldown: 8000, condition: "CheckEnemyHP() > 50"},
-        {key: "3", cooldown: 15000, condition: "CheckEnemyHP() > 25"},
-        {key: "4", cooldown: 30000, condition: "CheckEnemyHP() > 10"}
-    ]
-    
-    static ExecuteRotation() {
-        for skill in this.priorities {
-            if (this.CanUseSkill(skill)) {
-                SendInput skill.key
-                skillCooldowns[skill.key] := A_TickCount
-                Sleep Random(50, 150)  ; Human-like delay
+            getPredictedDelay() {
+                return Math.floor(
+                    500 + Math.random() * 300 * this.learningRate
+                );
             }
         }
-    }
-    
-    static CanUseSkill(skill) {
-        return A_TickCount - skillCooldowns[skill.key] >= skill.cooldown
-    }
-}
 
-CheckEnemyHP() {
-    ; Advanced HP detection using pixel color analysis
-    pixelCount := 0
-    totalPixels := 100
-    
-    loop 100 {
-        if (PixelGetColor(Random(900,1000), Random(500,600)) = targetHPColor)
-            pixelCount++
-    }
-    
-    return (pixelCount / totalPixels) * 100
-}
-
-; Main combat loop
-F1:: {
-    running := !running
-    if (running)
-        StartCombat()
-}
-
-StartCombat() {
-    while (running) {
-        ; Check if enemy is present
-        if (CheckEnemyHP() > 0) {
-            ; Execute skill rotation
-            SkillRotation.ExecuteRotation()
-            
-            ; Add random movement
-            if (Random(1,20) = 1) {
-                MovementPattern.GetRandomPattern()
+        // Advanced macro generation system
+        class MacroGenerator {
+            constructor() {
+                this.neuralPattern = new NeuralPattern();
+                this.detectionLevel = 0;
+                this.safetyChecks = {
+                    windowDetection: true,
+                    patternVariation: true,
+                    timingRandomization: true
+                };
             }
-        } else {
-            ; Search for new enemy
-            SearchPattern()
-        }
+
+            generateScript(requirements) {
+                let script = this.getBaseTemplate();
+                
+                // Add OCR support if needed
+                if (requirements.includes('ocr')) {
+                    script = this.addOCRSupport(script);
+                }
+
+                // Add neural pattern recognition
+                script = this.addNeuralPatterns(script);
+
+                // Add anti-detection measures
+                script = this.addAntiDetection(script);
+
+                return script;
+            }
+
+            addOCRSupport(script) {
+                return `
+; OCR Integration
+#Include Tesseract.ahk
+
+class OCRReader {
+    static async ReadScreen(x1, y1, x2, y2) {
+        ; Capture screen region
+        pBitmap := Gdip_BitmapFromScreen(x1 "|" y1 "|" x2-x1 "|" y2-y1)
         
-        ; Anti-detection pause
-        Sleep Random(100, 300)
-    }
-}
-
-SearchPattern() {
-    static searchRadius := 200
-    loop 4 {
-        if (!running)
-            break
-        MouseMove Random(-searchRadius, searchRadius), Random(-searchRadius, searchRadius), 10, "R"
-        Sleep Random(300, 500)
-        Click
-        Sleep Random(200, 400)
-    }
-}
-
-; Emergency stop
-F2:: {
-    running := false
-}`,
-
-            stealth: `
-#Requires AutoHotkey v2.0
-#SingleInstance Force
-
-; Ultra-Stealth Macro with Advanced Anti-Detection
-global running := false
-global lastActionTime := A_TickCount
-global patterns := []
-global detectionLevel := 0
-
-; Advanced timing system
-class TimingSystem {
-    static baseDelays := [100, 200, 300, 400, 500]
-    static variations := [-50, -30, -10, 10, 30, 50]
-    
-    static GetDelay() {
-        base := this.baseDelays[Random(1, this.baseDelays.Length)]
-        variation := this.variations[Random(1, this.variations.Length)]
-        return base + variation
+        ; Process with Tesseract
+        text := Tesseract.GetText(pBitmap)
+        Gdip_DisposeImage(pBitmap)
+        
+        return text
     }
     
-    static ShouldAddExtraDelay() {
-        return Random(1, 100) <= 15  ; 15% chance
+    static async MonitorRegion(x1, y1, x2, y2, pattern, callback) {
+        SetTimer () => this.CheckRegion(x1, y1, x2, y2, pattern, callback), 1000
+    }
+    
+    static async CheckRegion(x1, y1, x2, y2, pattern, callback) {
+        text := await this.ReadScreen(x1, y1, x2, y2)
+        if (RegExMatch(text, pattern)) {
+            callback(text)
+        }
     }
 }
 
-; Pattern analysis and adaptation
-class PatternAnalysis {
-    static RecordAction(action) {
-        patterns.Push({
-            action: action,
-            time: A_TickCount,
-            mousePos: {x: MouseGetPos(&x), y: MouseGetPos(&y)}
+; Initialize OCR
+OCR := OCRReader()
+` + script;
+            }
+
+            addNeuralPatterns(script) {
+                return `
+; Neural Pattern Recognition
+class NeuralPattern {
+    __New() {
+        this.patterns := []
+        this.lastActions := []
+        this.learningRate := 0.1
+    }
+    
+    AddAction(action) {
+        this.lastActions.Push({
+            type: action,
+            time: A_TickCount
         })
         
-        if (patterns.Length > 100)
-            patterns.RemoveAt(1)
-            
-        this.AnalyzePatterns()
+        if (this.lastActions.Length > 10) {
+            this.lastActions.RemoveAt(1)
+            this.AnalyzePattern()
+        }
     }
     
-    static AnalyzePatterns() {
-        if (patterns.Length < 10)
-            return
-            
-        ; Check for repetitive patterns
-        local repeatCount := 0
-        loop 5 {
-            if (this.CompareActions(patterns[-1], patterns[-1-A_Index]))
-                repeatCount++
-        }
+    AnalyzePattern() {
+        pattern := this.ExtractPattern()
+        this.patterns.Push(pattern)
         
-        if (repeatCount >= 3)
-            this.AdaptBehavior()
-    }
-    
-    static CompareActions(a1, a2) {
-        return a1.action = a2.action 
-            && Abs(a1.mousePos.x - a2.mousePos.x) < 10
-            && Abs(a1.mousePos.y - a2.mousePos.y) < 10
-    }
-    
-    static AdaptBehavior() {
-        detectionLevel++
-        this.AddRandomization()
-    }
-    
-    static AddRandomization() {
-        MouseMove Random(-20, 20), Random(-20, 20), 10, "R"
-        Sleep TimingSystem.GetDelay()
-    }
-}
-
-; Main macro functionality
-F1:: {
-    running := !running
-    if (running)
-        StartStealthMode()
-}
-
-StartStealthMode() {
-    while (running) {
-        ; Check detection level
-        if (detectionLevel > 5) {
-            this.PauseMacro("High detection risk - adding extra randomization")
-            Sleep Random(5000, 10000)  ; Long pause
-            detectionLevel := 0
-        }
-        
-        ; Perform action with variable timing
-        if (A_TickCount - lastActionTime > TimingSystem.GetDelay()) {
-            PerformAction()
-            lastActionTime := A_TickCount
-        }
-        
-        ; Add random pauses
-        if (TimingSystem.ShouldAddExtraDelay()) {
-            Sleep Random(1000, 3000)
-            PatternAnalysis.AddRandomization()
-        }
-        
-        Sleep 50  ; Prevent high CPU usage
-    }
-}
-
-PerformAction() {
-    ; Record and analyze the action
-    PatternAnalysis.RecordAction("click")
-    
-    ; Perform the actual action with randomization
-    MouseMove Random(-5, 5), Random(-5, 5), 10, "R"
-    Sleep Random(20, 50)
-    Click
-    Sleep Random(30, 70)
-    
-    ; Sometimes add extra mouse movement
-    if (Random(1, 10) = 1) {
-        MouseMove Random(-100, 100), Random(-100, 100), Random(10, 20)
-        Sleep Random(200, 400)
-    }
-}
-
-PauseMacro(reason) {
-    ToolTip reason
-    SetTimer () => ToolTip(), -3000
-}
-
-; Emergency stop
-F2:: {
-    running := false
-    detectionLevel := 0
-    patterns := []
-}`
-        };
-
-                function generateMacro() {
-            const gameType = document.getElementById('gameSelect').value;
-            const description = document.getElementById('macroDescription').value.toLowerCase();
-            const timing = document.getElementById('timingType').value;
-            const detection = document.getElementById('detectionMethod').value;
-            const safety = document.getElementById('safetyFeatures').value;
-
-            let script;
-            // Choose base template based on detected needs
-            if (description.includes('farm') || description.includes('gather') || description.includes('collect')) {
-                script = macroTemplates.farming;
-            } else if (description.includes('combat') || description.includes('fight') || description.includes('attack')) {
-                script = macroTemplates.combat;
-            } else {
-                script = macroTemplates.stealth;
-            }
-
-            // Modify script based on selected options
-            if (timing === 'random') {
-                script = addRandomization(script);
-            } else if (timing === 'adaptive') {
-                script = addAdaptiveTiming(script);
-            }
-
-            // Add selected detection method
-            if (detection === 'image') {
-                script = addImageDetection(script);
-            } else if (detection === 'memory') {
-                script = addMemoryDetection(script);
-            }
-
-            // Add safety features
-            if (safety === 'advanced') {
-                script = addAdvancedSafety(script);
-            } else if (safety === 'stealth') {
-                script = addStealthMode(script);
-            }
-
-            // Update editor and analysis
-            editor.setValue(script, -1);
-            updateAnalysis(script);
-        }
-
-        function addRandomization(script) {
-            return script.replace(/Sleep \d+/g, (match) => {
-                const baseDelay = parseInt(match.split(' ')[1]);
-                return `Sleep Random(${baseDelay - 50}, ${baseDelay + 50})`;
-            });
-        }
-
-        function addAdaptiveTiming(script) {
-            const adaptiveCode = `
-; Adaptive Timing System
-class AdaptiveTiming {
-    static baseDelay := 100
-    static lastSuccess := true
-    
-    static GetDelay() {
-        if (!this.lastSuccess)
-            this.baseDelay += 50
-        else if (this.baseDelay > 100)
-            this.baseDelay -= 10
-        
-        return Random(this.baseDelay - 20, this.baseDelay + 20)
-    }
-    
-    static UpdateSuccess(success) {
-        this.lastSuccess := success
-    }
-}`;
-            return adaptiveCode + '\n' + script;
-        }
-
-        function addImageDetection(script) {
-            const imageDetectionCode = `
-; Advanced Image Detection
-ImageSearch(ByRef foundX, ByRef foundY, 0, 0, A_ScreenWidth, A_ScreenHeight, "*30 target.png") {
-    if (ErrorLevel = 0) {
-        return true
-    }
-    return false
-}`;
-            return script.replace(/PixelGetColor/g, 'ImageSearch');
-        }
-
-        function addMemoryDetection(script) {
-            const memoryDetectionCode = `
-; Memory Reading (Pseudocode - requires additional setup)
-class MemoryReader {
-    static baseAddress := "0x00000000"
-    static offsets := [0x123, 0x456, 0x789]
-    
-    static ReadValue() {
-        address := this.baseAddress
-        for offset in this.offsets
-            address := address + offset
-        return ReadMemory(address)
-    }
-}`;
-            return memoryDetectionCode + '\n' + script;
-        }
-
-        function addAdvancedSafety(script) {
-            const safetyCode = `
-; Advanced Safety System
-class SafetySystem {
-    static patterns := []
-    static warnings := 0
-    
-    static CheckPattern() {
         if (this.patterns.Length > 100) {
             this.patterns.RemoveAt(1)
+            this.UpdateLearningRate()
         }
-        
-        this.patterns.Push({
-            time: A_TickCount,
-            pos: {x: MouseGetPos(&x), y: MouseGetPos(&y)}
-        })
-        
-        return this.AnalyzePatterns()
     }
     
-    static AnalyzePatterns() {
-        if (this.patterns.Length < 20)
-            return true
+            UpdateLearningRate() {
+                repetitions := this.CountRepetitions()
+                this.learningRate := Max(0.05, 0.1 - (repetitions * 0.01))
+                
+                ; Adapt pattern if becoming too predictable
+                if (repetitions > 5) {
+                    this.AddRandomization()
+                }
+            }
             
-        ; Check for repetitive patterns
-        repeatCount := 0
-        loop 10 {
-            if (this.ComparePositions(this.patterns[-1], this.patterns[-1-A_Index]))
-                repeatCount++
-        }
+            AddRandomization() {
+                delay := Random(100, 300)
+                MouseMove Random(-20, 20), Random(-20, 20), 10, "R"
+                Sleep delay
+            }
+            
+            PredictNextAction() {
+                if (this.patterns.Length < 10)
+                    return "random"
+                    
+                mostCommon := this.GetMostCommonPattern()
+                return this.GenerateVariation(mostCommon)
+            }
+}
+` + script;
+            }
+
+            addAntiDetection(script) {
+                return `
+; Advanced Anti-Detection System
+class AntiDetection {
+    static patterns := []
+    static lastActions := []
+    static riskLevel := 0
+    
+    class MemoryScanner {
+        static baseAddresses := []
+        static knownPatterns := []
         
-        if (repeatCount > 7) {
-            this.warnings++
+        static ScanMemory() {
+            ; Advanced memory pattern scanning
+            for addr in this.baseAddresses {
+                value := this.ReadMemoryValue(addr)
+                if this.IsPatternMatch(value)
+                    return true
+            }
             return false
         }
         
-        return true
+        static IsPatternMatch(value) {
+            return this.knownPatterns.HasValue(value)
+        }
+        
+        static UpdatePatterns() {
+            ; Dynamically update known patterns
+            loop 10 {
+                pattern := this.ScanForNewPatterns()
+                if pattern
+                    this.knownPatterns.Push(pattern)
+            }
+        }
     }
     
-    static ComparePositions(p1, p2) {
-        return Abs(p1.pos.x - p2.pos.x) < 5 && Abs(p1.pos.y - p2.pos.y) < 5
+    static InitializeSafety() {
+        this.SetupWindowMonitor()
+        this.InitializeMemoryScanner()
+        SetTimer () => this.PerformSafetyChecks(), 1000
     }
+    
+    static PerformSafetyChecks() {
+        if (this.IsHighRisk()) {
+            this.PauseMacro()
+            return
+        }
+        
+        ; Check for admin tools
+        if (this.DetectAdminTools()) {
+            this.EnterStealthMode()
+            return
+        }
+        
+        ; Update risk level
+        this.UpdateRiskLevel()
+    }
+    
+    static IsHighRisk() {
+        return this.riskLevel > 7
+    }
+    
+    static UpdateRiskLevel() {
+        ; Analyze recent actions
+        repetitions := this.CountRepetitions()
+        timingAnalysis := this.AnalyzeTimingPatterns()
+        
+        ; Update risk score
+        this.riskLevel := (repetitions * 0.3) + (timingAnalysis * 0.7)
+    }
+    
+    static EnterStealthMode() {
+        ; Implement various stealth measures
+        this.RandomizePatterns()
+        this.AdjustTiming()
+        this.AddHumanLikeErrors()
+    }
+    
+    static AddHumanLikeErrors() {
+        if (Random(1, 100) <= 5) {
+            ; Simulate human mistakes
+            this.SimulateError()
+        }
+    }
+    
+    static SimulateError() {
+        errors := [
+            () => this.MissClick(),
+            () => this.OverShoot(),
+            () => this.SlowResponse(),
+            () => this.DoubleTap()
+        ]
+        
+        Random(errors*)()
+    }
+}
+
+; Initialize the advanced systems
+neural := NeuralPattern()
+safety := AntiDetection()
+` + script;
+            }
+
+            getBaseTemplate() {
+                return `
+#Requires AutoHotkey v2.0
+#SingleInstance Force
+#MaxThreadsPerHotkey 2
+
+; Global Configurations
+SetWorkingDir A_ScriptDir
+CoordMode "Mouse", "Screen"
+SetKeyDelay 10, 50
+SetMouseDelay 10
+
+; Initialize OCR and Pattern Recognition
+global OCR := OCRReader()
+global NeuralNet := NeuralPattern()
+global Safety := AntiDetection()
+
+; Main Hotkeys
+F1:: {
+    Safety.InitializeSafety()
+    ToggleMacro()
+}
+
+F2:: {
+    EmergencyStop()
+}
+
+; Main Macro Logic
+ToggleMacro() {
+    static running := false
+    running := !running
+    
+    if (running) {
+        ToolTip "Macro Active - Neural Network Engaged"
+        SetTimer MainLoop, 50
+    } else {
+        SetTimer MainLoop, 0
+        ToolTip "Macro Stopped"
+    }
+    SetTimer () => ToolTip(), -1000
+}
+
+MainLoop() {
+    try {
+        ; Get neural network prediction
+        nextAction := NeuralNet.PredictNextAction()
+        
+        ; Execute action with anti-detection
+        Safety.PreActionCheck()
+        ExecuteAction(nextAction)
+        Safety.PostActionCheck()
+        
+        ; Update pattern learning
+        NeuralNet.AddAction(nextAction)
+        
+        ; Add human-like variation
+        if (Random(1, 100) <= 15)
+            Safety.AddHumanLikeErrors()
+            
+    } catch Error as e {
+        LogError(e)
+        EmergencyStop()
+    }
+}
+
+ExecuteAction(action) {
+    switch action.type {
+        case "click":
+            SafeClick()
+        case "move":
+            SafeMove(action.x, action.y)
+        case "key":
+            SafeSend(action.key)
+    }
+}
+
+SafeClick() {
+    PreClickCheck()
+    Click
+    PostClickCheck()
+}
+
+SafeMove(x, y) {
+    MouseMove x, y, Random(2, 8)
+    Sleep Random(10, 30)
+}
+
+SafeSend(key) {
+    PreKeyCheck()
+    SendInput key
+    PostKeyCheck()
+}
+
+EmergencyStop() {
+    SetTimer MainLoop, 0
+    Safety.Cleanup()
+    ExitApp
 }`;
-            return safetyCode + '\n' + script;
+            }
         }
 
-        function addStealthMode(script) {
-            const stealthCode = `
-; Stealth Mode
-class StealthMode {
-    static activeWindows := []
-    static lastWindowCheck := 0
-    
-    static Initialize() {
-        this.ScanWindows()
-        SetTimer this.ScanWindows, 5000
-    }
-    
-    static ScanWindows() {
-        ; Monitor for game master or admin windows
-        WinGetList("ahk_exe GameMaster.exe", &windows)
-        if (windows.Length > 0) {
-            this.Pause("Admin detection")
-            return false
-        }
-        return true
-    }
-    
-    static AddRandomization() {
-        if (Random(1, 100) <= 15) {
-            Sleep Random(1000, 3000)
-            MouseMove Random(-50, 50), Random(-50, 50), 10, "R"
-        }
-    }
-}`;
-            return stealthCode + '\n' + script;
+        // Initialize generator and handlers
+        const generator = new MacroGenerator();
+
+        // Process AI chat requests
+        function processAIRequest() {
+            const input = document.getElementById('aiInput').value;
+            if (!input) return;
+
+            // Add user message to chat
+            addChatMessage(input, true);
+
+            // Generate appropriate response and script
+            const requirements = analyzeRequirements(input);
+            const script = generator.generateScript(requirements);
+            editor.setValue(script, -1);
+
+            // Add AI response
+            const response = generateAIResponse(requirements);
+            addChatMessage(response, false);
+
+            // Clear input
+            document.getElementById('aiInput').value = '';
         }
 
-        function updateAnalysis(script) {
-            let riskLevel = "Low";
-            let performance = "Minimal";
-
-            // Analyze risk
-            if (script.includes("PixelGetColor")) riskLevel = "Medium";
-            if (script.includes("ImageSearch")) riskLevel = "Medium-High";
-            if (script.includes("ReadMemory")) riskLevel = "Very High";
-
-            // Analyze performance
-            if (script.includes("loop") || script.includes("while")) performance = "Moderate";
-            if (script.includes("ImageSearch")) performance = "High";
-            if (script.includes("ReadMemory")) performance = "Very High";
-
-            document.getElementById('riskLevel').textContent = `${riskLevel} Risk - Take appropriate precautions`;
-            document.getElementById('performanceImpact').textContent = `${performance} Impact on System Resources`;
+        function addChatMessage(message, isUser) {
+            const chat = document.getElementById('chatHistory');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+            
+            msgDiv.innerHTML = `
+                <div class="max-w-[80%] ${isUser ? 'bg-purple-600/50' : 'bg-gray-700/50'} 
+                     rounded-lg px-4 py-2 backdrop-blur-sm">
+                    ${message}
+                </div>
+            `;
+            
+            chat.appendChild(msgDiv);
+            chat.scrollTop = chat.scrollHeight;
         }
 
-        function downloadMacro() {
-            const blob = new Blob([editor.getValue()], {type: "text/plain"});
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "gaming_macro.ahk";
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
+        // Initialize with welcome message
+        addChatMessage("Welcome! I'm your advanced macro AI assistant. I can help you create sophisticated gaming macros with OCR support, neural pattern learning, and advanced anti-detection features. What would you like to automate?", false);
 
-        function testMacro() {
-            alert("Test mode activated - Press F1 to start/stop the macro, F2 for emergency stop");
-        }
-
-        // Initialize with empty macro template
-        editor.setValue(macroTemplates.stealth, -1);
-        updateAnalysis(macroTemplates.stealth);
     </script>
 </body>
 </html>
